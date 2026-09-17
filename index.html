@@ -120,6 +120,18 @@
   .btn-ghost{border:1px solid var(--border); color:var(--text);}
   .btn-ghost:hover{border-color:var(--accent);}
 
+  .btn-group{display:inline-flex; align-items:stretch;}
+  .btn-group .btn-ghost{border-radius:6px 0 0 6px;}
+  .btn-copy{
+    border:1px solid var(--border); border-left:none; border-radius:0 6px 6px 0;
+    background:transparent; color:var(--text-dim); cursor:pointer;
+    padding:0 14px; display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--body); font-size:13px; transition:border-color .15s, color .15s;
+  }
+  .btn-copy:hover{border-color:var(--accent); color:var(--accent);}
+  .btn-copy svg{width:15px; height:15px; flex-shrink:0;}
+  .btn-copy.copied{color:var(--online); border-color:var(--online);}
+
   /* --- Stat row --- */
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden;}
   .stat{background:var(--panel); padding:26px 18px; text-align:left;}
@@ -240,7 +252,13 @@
     <div class="cta-row">
       <a class="btn btn-primary" href="Antonio_Guajardo_Resume.pdf" download>Download resume</a>
       <a class="btn btn-ghost" href="https://www.linkedin.com/in/antonio-guajardo-6892a31a4/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn btn-ghost" href="mailto:aguajardo2001@icloud.com">Email me</a>
+      <div class="btn-group">
+        <a class="btn btn-ghost" href="mailto:aguajardo2001@icloud.com">Email me</a>
+        <button class="btn-copy" type="button" onclick="copyEmail(this)" aria-label="Copy email address" title="Copy email address">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <span class="copy-label">Copy</span>
+        </button>
+      </div>
       <a class="btn btn-ghost" href="tel:+12108016791">(210) 801-6791</a>
     </div>
   </section>
@@ -511,7 +529,12 @@
       </div>
       <div class="foot-links">
         <a href="https://www.linkedin.com/in/antonio-guajardo-6892a31a4/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:aguajardo2001@icloud.com">aguajardo2001@icloud.com</a>
+        <div class="btn-group" style="align-self:flex-start;">
+          <a class="btn btn-ghost" style="padding:8px 14px; font-size:14.5px; font-weight:400;" href="mailto:aguajardo2001@icloud.com">aguajardo2001@icloud.com</a>
+          <button class="btn-copy" type="button" onclick="copyEmail(this)" aria-label="Copy email address" title="Copy email address">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </button>
+        </div>
         <a href="tel:+12108016791">(210) 801-6791</a>
         <a href="Antonio_Guajardo_Resume.pdf" download>Download resume →</a>
         <span style="color:var(--text-dim);">San Antonio, TX</span>
@@ -521,6 +544,40 @@
   </footer>
 
 </main>
+
+<script>
+  function copyEmail(btn){
+    var email = 'aguajardo2001@icloud.com';
+    function showCopied(){
+      var label = btn.querySelector('.copy-label');
+      var original = label ? label.textContent : null;
+      btn.classList.add('copied');
+      if(label) label.textContent = 'Copied!';
+      btn.setAttribute('title', 'Copied!');
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        if(label) label.textContent = original;
+        btn.setAttribute('title', 'Copy email address');
+      }, 1600);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(email).then(showCopied)['catch'](function(){ legacyCopy(); });
+    } else {
+      legacyCopy();
+    }
+    function legacyCopy(){
+      var ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try{ document.execCommand('copy'); showCopied(); }catch(e){}
+      document.body.removeChild(ta);
+    }
+  }
+</script>
 
 <script>
   (function(){
